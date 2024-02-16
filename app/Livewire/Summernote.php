@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class Summernote extends Component
 {
-    public $note,$text;
+    public $note,$text,$snote_id;
 
     public function render()
     {
@@ -24,5 +24,39 @@ class Summernote extends Component
        $snote->save();
 
 
+    }
+    public function update(){
+        $this->validate([
+            'text' => 'required',
+            'note' =>'required',
+        ]);
+        $snote =ModelsSummernote::find($this->snote_id);
+        $snote->note = $this->note;
+        $snote->save();
+
+
+       $this->dispatch('close-modal');
+
+
+
+
+    }
+    public function edit($id){
+
+        $snote = ModelsSummernote::find($id);
+        $this->note = $snote->note;
+        $this->text = $snote->note;
+        $this->snote_id = $snote->id;
+    }
+    public function delete($id){
+
+        ModelsSummernote::find($id)->delete();
+
+    }
+
+    public function closeModal(){
+        $this->reset();
+        $this->resetValidation();
+        $this->dispatch('close-modal');
     }
 }
